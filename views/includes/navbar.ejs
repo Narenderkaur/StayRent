@@ -1,0 +1,101 @@
+<style>
+  /* 🔍 Input */
+  .search-inp {
+    border-radius: 6px;              /* default small corners */
+    border: 1px solid #ccc;
+    transition: all 0.3s ease-in-out; /* smooth animation */
+    margin-right: 0.5rem;
+  }
+  
+  .search-inp:focus,
+  .search-inp:hover {
+    border-radius: 25px;             /* rounded on hover/focus */
+    border-color: #fe424d;
+    box-shadow: 0 0 6px rgba(254, 66, 77, 0.4);
+    outline: none;
+  }
+  
+  /* 🔴 Search Button */
+  .btn-search {
+    background-color: #fe424d;
+    color: white;
+    border-radius: 25px;
+    padding: 0 1rem;
+    opacity: 0.9;
+    transition: all 0.2s ease-in-out;
+    width: 45%;
+  }
+  
+  .btn-search:hover {
+    opacity: 1;
+    background-color: #e63946; /* darker red on hover */
+    color: #fff;
+  }
+  
+  .btn-search i {
+    margin-right: 0.5em;
+  }
+  
+  /* Center Search Bar */
+  .navbar-center {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+  }
+  </style>
+  
+<nav class="navbar navbar-expand-lg bg-body-light sticky-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/listings">
+      <img src="/images/FinalLogo_stayrent.png" alt="StayRent Logo" height="60">
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <!-- Always visible -->
+      <div class="navbar-nav">
+        <a class="nav-link" href="/listings">Explore</a>
+      </div> 
+
+      <!-- Search Bar -->
+      <div class="navbar-center">
+        <form action="/listings/search" method="GET" class="d-flex">
+          <div class="input-group">
+        <input 
+          name="query" 
+          class="form-control search-inp" 
+          type="search" 
+          placeholder="Search by title, or category"
+        />
+      </div>
+        <button class="btn btn-search" type="submit">
+          <i class="fa-solid fa-magnifying-glass"></i> Search
+        </button>
+          
+        </form>
+      </div>
+      <!-- User Section -->
+      <div class="navbar-nav ms-auto">
+        <% if(!currUser){ %>
+          <a class="nav-link" href="/signup">Signup</a>
+          <a class="nav-link" href="/login">Login</a>
+        <% } else { %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Hi, <%= currUser.username %>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+              <li><a class="dropdown-item" href="/listings/new">List Your Property</a></li>
+              <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            </ul>
+          </li>
+        <% } %>
+      </div> 
+
+    </div>
+  </div>
+</nav>

@@ -1,0 +1,233 @@
+<% layout("/layouts/boilerplate.ejs") %>
+
+<style>
+  .form-switch :hover{
+    cursor: pointer;
+  }
+  
+  #filters-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  #toggle-button {
+    display: none;
+    background-color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    align-self: flex-end;
+    margin-bottom: 1rem;
+  }
+
+  #filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter {
+    margin-top: 1rem;
+    margin-right: 2rem;
+    text-align: center;
+    opacity: 0.7;
+  }
+
+  .filter:hover {
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  .filter p {
+    font-size: 0.8rem;
+  }
+
+  .filter a {
+    text-decoration: none;
+    color: black;
+  }
+
+  .tax-info {
+    display: none;
+  }
+
+    .tax-toggle {
+      border: 1px solid black;
+      border-radius: 1rem;
+      height: 3.25rem;
+      padding: 1rem;
+      margin-left: 1.6rem;
+      /* margin-top: 1rem;  */
+      margin-right: 2rem;
+      display: flex;
+      align-items: center;
+    }
+
+  .tax-toggle:hover {
+    border: 2px solid black;
+
+}
+  @media (max-width: 768px) {
+    #filters {
+      flex-direction: column;
+      display: none;
+    }   
+
+    #toggle-button {
+      display: block;
+    }
+  }
+</style>
+
+<div id="filters-container">
+  <button id="toggle-button">
+    <i class="fa fa-bars"></i> Filters
+  </button>
+
+  <div id="filters">
+    <div class="filter">
+      <a href="/listings?category=Trending">
+        <div><i class="fa-solid fa-fire"></i></div>
+        <p>Trending</p>
+      </a>
+    </div>
+
+    <div class="filter">
+      <a href="/listings?category=Rooms">
+        <div><i class="fa-solid fa-bed"></i></div>
+        <p>Rooms</p>
+      </a>
+    </div>
+
+    <div class="filter">
+      <a href="/listings?category=Cities">
+        <div><i class="fa-solid fa-mountain-city"></i></div>
+        <p>Cities</p>
+      </a>
+    </div>
+
+    <div class="filter">
+      <a href="/listings?category=Mountains">
+        <div><i class="fa-solid fa-mountain"></i></div>
+        <p>Mountains</p>
+      </a>
+    </div>
+
+    <div class="filter">
+      <a href="/listings?category=Pools">
+        <div><i class="fa-solid fa-person-swimming"></i></div>
+        <p>Pools</p>
+      </a>
+    </div>
+
+    <div class="filter">
+      <a href="/listings?category=Camping">
+        <div><i class="fa-solid fa-campground"></i></div>
+        <p>Camping</p>
+      </a>
+    </div>
+
+    <div class="filter">
+      <a href="/listings?category=Farms">
+        <div><i class="fa-solid fa-cow"></i></div>
+        <p>Farms</p>
+      </a>
+    </div>
+
+    <div class="filter">
+      <a href="/listings?category=Arctic">
+        <div><i class="fa-solid fa-snowflake"></i></div>
+        <p>Arctic</p>
+      </a>
+    </div>
+
+    <div class="filter">
+      <a href="/listings?category=Boats">
+        <div><i class="fa-solid fa-sailboat"></i></div>
+        <p>Boats</p>
+      </a>
+    </div>
+
+    <div class="filter">
+      <a href="/listings?category=Towers">
+        <div><i class="fa-solid fa-tower-observation"></i></div>
+        <p>Towers</p>
+      </a>
+    </div>
+
+    <div class="tax-toggle">
+      <div class="form-check-reverse form-switch">
+        <input class="form-check-input" type="checkbox" role="switch" id="switchCheckDefault">
+        <label class="form-check-label" for="switchCheckDefault">Display total after taxes</label>
+      </div>
+    </div>
+  </div>
+  
+</div>
+
+<% if (allListings.length === 0) { %>
+  <div class="text-center my-5">
+    <h2>No listings found for "<%= currentCategory %>"</h2>
+    <p>Please try a different category.</p>
+    <a href="/listings" class="btn btn-danger mt-3">Explore All Listings</a>
+  </div>
+<% } else { %>
+  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+    <% for (let listing of allListings) { %>
+      <a href="/listings/<%= listing._id %>" class="listing-link">
+        <div class="card col listing-card">
+          <img src="<%= listing.image.url %>" class="card-img-top" alt="listing-image" style="height: 20rem;">
+          <div class="card-img-overlay"></div>
+          <div class="card-body">
+            <p class="card-text" 
+              data-baseprice="<%= listing.price %>" 
+              data-title="<%= listing.title %>">
+              <b><%= listing.title %></b><br>
+              &#8377; <%= listing.price.toLocaleString("en-IN") %>/night
+              <i class="tax-info">&nbsp;&nbsp;+18% GST</i>
+            </p>
+
+          </div>
+        </div>
+      </a>
+    <% } %>
+  </div>
+<% } %>
+
+<script>
+  // Tax toggle logic
+  const taxSwitch = document.getElementById("switchCheckDefault");
+
+  taxSwitch.addEventListener("change", () => {
+    const priceElements = document.querySelectorAll(".card-text");
+
+    priceElements.forEach((priceEl) => {
+      // Extract the base price (before GST)
+      let basePrice = parseInt(
+        priceEl.getAttribute("data-baseprice")
+      );
+
+      if (taxSwitch.checked) {
+        // Calculate price after 18% GST
+        let finalPrice = Math.round(basePrice * 1.18);
+        priceEl.innerHTML =
+          `<b>${priceEl.getAttribute("data-title")}</b><br>` +
+          `&#8377; ${finalPrice.toLocaleString("en-IN")}/night <i>(incl. GST)</i>`;
+      } else {
+        // Show original price
+        priceEl.innerHTML =
+          `<b>${priceEl.getAttribute("data-title")}</b><br>` +
+          `&#8377; ${basePrice.toLocaleString("en-IN")}/night <i class="tax-info">&nbsp;&nbsp;+18% GST</i>`;
+      }
+    });
+  });
+
+  // Responsive filters toggle
+  const toggleButton = document.getElementById("toggle-button");
+  const filters = document.getElementById("filters");
+  toggleButton.addEventListener("click", () => {
+    filters.style.display = filters.style.display === "flex" ? "none" : "flex";
+  });
+</script>
