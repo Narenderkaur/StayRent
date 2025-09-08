@@ -4,7 +4,7 @@ const Listing = require('../models/listing.js');
 const Review = require('../models/review.js');
 const User = require('../models/user.js');
 
-const MONGO_URL = "mongodb://127.0.0.1:27017/WonderLust";
+const MONGO_URL = "mongodb://127.0.0.1:27017/StayRent";
 
 main()
 .then(()=>{console.log("Database Connected");})
