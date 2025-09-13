@@ -99,10 +99,9 @@ app.get("/demouser",async (req,res)=>{
   res.send(registeredUser);
 })
 
-
+app.use("/",userRouter);
 app.use("/listings",listingRouter);//we used this line instead of whole code and avoided there a word which is nost commonly used->.listing
 app.use("/listings/:id/reviews", reviewsRouter);              
-app.use("/",userRouter);
 
 app.all('*',(req,res,next)=>{
   next(new ExpressError(404,'Page not Found!'));
