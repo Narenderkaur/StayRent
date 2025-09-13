@@ -5,6 +5,10 @@ const passport = require('passport');
 const { saveRedirectUrl } = require('../middleware');
 const userController = require('../controllers/user');
 
+router.get("/", (req, res) => {
+    res.redirect("/listings");
+  });
+  
 router.route('/signup')
     .get(userController.renderSigupForm)
     .post(userController.signup)
